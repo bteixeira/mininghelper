@@ -1,0 +1,9 @@
+{
+    "name": "mininghelper",
+	"author": "Bruno Teixeira <bteixeira666@gmail.com>",
+    "version": "0.0.0",
+	"dependencies": {
+		"mongojs": "*",
+		"request": "*"
+	}
+}
