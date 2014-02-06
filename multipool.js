@@ -2,7 +2,7 @@ var db = require('mongojs').connect('mininghelper', ['rewards']);
 var request = require('request');
 require(__dirname + '/config.js');
 
-var TIMEOUT = 1000;
+var TIMEOUT = 60 * 1000;
 
 function fetch () {
 	request({
