@@ -66,9 +66,29 @@ app.get('/', function (req, res) {
 });
 
 app.get('/balance', function (req, res) {
+	/*
 	db.balances.find(function(err, docs) {
 		if (!err) {
 			res.end(jades.balance({balances: docs}));
+		}
+	});
+	*/
+	
+	db.balances.group({
+		key: {coin: 1},
+		reduce: function (doc, res) {
+			if (doc.time > res.time) {
+				res.time = doc.time;
+				res.balance = doc.confirmed + doc.unconfirmed;
+			}
+		},
+		initial: {
+			time: 0,
+			balance: 0
+		}
+	}, function(err, docs) {
+		if (!err) {
+			res.end(jades.balanceSimple({balances: docs}));
 		}
 	});
 });
