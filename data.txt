@@ -1,0 +1,83 @@
+(Entities)
+
+COINS
+	code
+	text name
+	algo
+
+EXCHANGES
+	name
+	url
+
+POOLS
+	name
+	url
+
+(WALLETS = EXCHANGES + POOLS)
+
+
+(Log)
+EXCHANGE_RATES
+	time
+	buy*
+	from*
+	rate
+	exchange*
+
+DIFFICULTIES
+	time
+	coin*
+	difficulty
+	source* (pool?)
+
+BALANCES
+	time
+	coin*
+	confirmed
+	unconfirmed
+	wallet*
+
+HASH_RATES
+	time
+	coin*
+	hashrate
+	pool*
+
+------------------------------------------------------------------------------------------------------------------------
+
+(Infer)
+
+Coin Value
+	get last rate for each exchange house
+	get highest for each buying coin
+	for each buying coin:
+		if it's EUR return
+		if not, recurse Coin Value of that coin
+	choose highest rate, print chain of coin exchange
+
+
+Coin Balance
+	get latest balance of each wallet for this coin
+	sum all, keep track of unconfirmed
+	multiply by coin value
+	print sum, and unconfirmed
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+(Views)
+Balance
+	(replace gdoc)
+	List coins
+		symbol
+		balance
+			amount
+			value
+				exchange chain
+					time ellapsed
+		difficulty
+			time ellapsed
+e.g.:
+	OpenSourceCoin	OSC	€ 2.338941 ((OSC->BTCcryptsy->EURmtgox)) (117.04824123, 5.00523844 unconfirmed = € 0.000001)
+
+	Total balance, Total unconfirmed

@@ -4,6 +4,8 @@
     "version": "0.0.0",
 	"dependencies": {
 		"mongojs": "*",
-		"request": "*"
+		"request": "*",
+		"jade": "*",
+		"express": "*"
 	}
 }

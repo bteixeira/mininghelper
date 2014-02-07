@@ -1,0 +1,16 @@
+extends layout
+append content
+	table
+		tr
+			th time
+			th coin*
+			th confirmed
+			th unconfirmed
+			th wallet*
+		for balance in balances
+			tr
+				td= balance.time
+				td= balance.coin
+				td= balance.confirmed
+				td= balance.unconfirmed
+				td= balance.wallet
