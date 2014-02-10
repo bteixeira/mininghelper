@@ -2,10 +2,11 @@ var http = require('http');
 
 var Crawler = require(__dirname + '/crawler.js');
 var multipool = require(__dirname + '/multipool.js');
+var bitminter = require(__dirname + '/bitminter.js');
 require(__dirname + '/catalogues.js');
 
 
-var crawlers = [multipool];
+var crawlers = [multipool, bitminter];
 
 function pragDate (timestamp) {
 	var MONTHS = 'JA FE MR AP MA JN JL AG ST OT NV DE'.split(' ');
@@ -68,14 +69,34 @@ app.get('/balance', function (req, res) {
 	db.balances.group({
 		key: {coin: 1},
 		reduce: function (doc, res) {
-			if (doc.time > res.time) {
-				res.time = doc.time;
-				res.balance = doc.confirmed + doc.unconfirmed;
+			var wallet = doc.wallet;
+			if (!(wallet in res.wallets)) {
+				res.wallets[wallet] = doc;
+			} else if (doc.time > res.wallets[wallet].time) {
+				res.wallets[wallet] = doc;
 			}
 		},
 		initial: {
-			time: 0,
-			balance: 0
+			wallets: {}
+		},
+		finalize: function (result) {
+			result.balance = 0;
+			result.unconfirmed = 0;
+			result.time = Infinity;
+			var wallet;
+			var t, c, u;
+			for (var k in result.wallets) {
+				wallet = result.wallets[k];
+				c = parseFloat(wallet.confirmed) || 0;
+				u = parseFloat(wallet.unconfirmed) || 0;
+				t = wallet.time;
+				
+				result.balance += c + u;
+				result.unconfirmed += u;
+				if (t < result.time) {
+					result.time = t;
+				}
+			}
 		}
 	}, function(err, docs) {
 		if (!err) {

@@ -22,7 +22,10 @@ var Crawler = function (url, handler, interval) {
 					throw err;
 				}
 				if (response.statusCode !== 200) {
-					console.warn('warning, status code is ' + response.statusCode);
+					console.warn('warning, status code is ' + response.statusCode + ', url=' + url);
+					console.warn(body);
+				} else {
+					console.log('new data from ' + url);
 				}
 				if (body) {
 					handler.call(me, body);

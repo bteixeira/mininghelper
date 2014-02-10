@@ -4,9 +4,11 @@ append content
 		tr
 			th Coin
 			th Balance
+			th (Unconfirmed)
 			th Timestamp
 		for balance in balances
 			tr
 				td= balance.coin
 				td= balance.balance
+				td= balance.unconfirmed
 				td= balance.time
