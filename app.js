@@ -3,10 +3,11 @@ var http = require('http');
 var Crawler = require(__dirname + '/crawler.js');
 var multipool = require(__dirname + '/multipool.js');
 var bitminter = require(__dirname + '/bitminter.js');
+var mtgox = require(__dirname + '/mtgox.js');
 require(__dirname + '/catalogues.js');
 
 
-var crawlers = [multipool, bitminter];
+var crawlers = [multipool, bitminter, mtgox];
 
 function pragDate (timestamp) {
 	var MONTHS = 'JA FE MR AP MA JN JL AG ST OT NV DE'.split(' ');

@@ -1,5 +1,5 @@
 var request = require('request');
-var db = require('mongojs').connect('mininghelper', ['balances']);
+var db = require('mongojs').connect('mininghelper', ['balances', 'exchange_rates']);
 
 var TIMEOUT = 60 * 1000;
 
@@ -62,8 +62,13 @@ var Crawler = function (url, handler, interval) {
 		db.balances.save(data);
 	};
 	
-	me.logHashrate = function () {
+	me.logHashrate = function (data) {
 		// DO ME
+	};
+	
+	me.logExchangeRate = function (data) {
+		data.time = data.time || new Date().getTime();
+		db.exchange_rates.save(data);
 	};
 
 };
