@@ -4,36 +4,34 @@ var Crawler = require(__dirname + '/crawler.js');
 var multipool = require(__dirname + '/multipool.js');
 require(__dirname + '/catalogues.js');
 
-/*
-var crawlers = [
-	new Crawler('http://api.multipool.us/api.php?api_key=' + KEYS.MULTIPOOL, function (body) {
-		var coins = body.currency;
-		var coin;
-		for (var name in coins) {
-			if (coins.hasOwnProperty(name)) {
-				coin = coins[name];
-				db.rewards.save({
-					time: new Date().getTime(),
-					coin: name.toUpperCase(),
-					confirmed: coin.confirmed_rewards,
-					unconfirmed: coin.estimated_rewards,
-					hashrate: coin.hashrate
-				});
-			}
-		}
-	})
-];
-*/
 
 var crawlers = [multipool];
+
+function pragDate (timestamp) {
+	var MONTHS = 'JA FE MR AP MA JN JL AG ST OT NV DE'.split(' ');
+	var date = new Date(timestamp);
+	
+	var month = MONTHS[date.getMonth()];
+	var day = date.getDate();
+	var hours = date.getHours();
+	if (hours < 10) {
+		hours = '0' + hours;
+	}
+	var minutes = date.getMinutes();
+	if (minutes < 10) {
+		minutes = '0' + minutes;
+	}
+	var seconds = date.getSeconds();
+	if (seconds < 10) {
+		seconds = '0' + seconds;
+	}
+	return month + day + '@' + hours + ':' + minutes + ':' + seconds;
+	;
+}
 
 for (var i = 0 ; i < crawlers.length ; i++) {
 	crawlers[i].start();
 }
-
-
-
-
 
 
 
@@ -66,13 +64,6 @@ app.get('/', function (req, res) {
 });
 
 app.get('/balance', function (req, res) {
-	/*
-	db.balances.find(function(err, docs) {
-		if (!err) {
-			res.end(jades.balance({balances: docs}));
-		}
-	});
-	*/
 	
 	db.balances.group({
 		key: {coin: 1},
@@ -88,9 +79,15 @@ app.get('/balance', function (req, res) {
 		}
 	}, function(err, docs) {
 		if (!err) {
+			for (var i = 0 ; i < docs.length ; i++) {
+				docs[i].time = pragDate(docs[i].time);
+			}
 			res.end(jades.balanceSimple({balances: docs}));
+		} else {
+			console.error(err);
 		}
 	});
+
 });
 
 app.listen(7410);
