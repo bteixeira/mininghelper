@@ -28,7 +28,6 @@ function pragDate (timestamp) {
 		seconds = '0' + seconds;
 	}
 	return month + day + '@' + hours + ':' + minutes + ':' + seconds;
-	;
 }
 
 for (var i = 0 ; i < crawlers.length ; i++) {

@@ -1,6 +1,6 @@
 extends layout
 append content
-	table
+	table.data
 		tr
 			th Coin
 			th Balance
@@ -9,6 +9,6 @@ append content
 		for balance in balances
 			tr
 				td= balance.coin
-				td= balance.balance
-				td= balance.unconfirmed
-				td= balance.time
+				td.curr= balance.balance.toFixed(8)
+				td.curr= balance.unconfirmed.toFixed(8)
+				td.time= balance.time
