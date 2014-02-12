@@ -1,5 +1,5 @@
 var Crawler = require(__dirname + '/crawler.js');
-require(__dirname + '/config.js');
+var KEYS = require(__dirname + '/config.js').KEYS;
 
 var bitminter = new Crawler('https://bitminter.com/api/users?key=' + KEYS.BITMINTER, function (body) {
 	

@@ -1,14 +1,20 @@
 extends layout
 append content
-	table.data
-		tr
-			th Coin
-			th Balance
-			th (Unconfirmed)
-			th Timestamp
-		for balance in balances
-			tr
-				td= balance.coin
-				td.curr= balance.balance.toFixed(8)
-				td.curr= balance.unconfirmed.toFixed(8)
-				td.time= balance.time
+    table.data
+        tr
+            th Coin
+            th Balance
+            th (Unconfirmed)
+            th Timestamp
+        for balance in balances
+            tr
+                td= balance.coin
+                if balance.balance
+                    td.curr= balance.balance.toFixed(8)
+                else
+                    td.curr.empty= balance.balance.toFixed(8)
+                if balance.unconfirmed
+                    td.curr= balance.unconfirmed.toFixed(8)
+                else
+                    td.curr.empty= balance.unconfirmed.toFixed(8)
+                td.time= balance.time

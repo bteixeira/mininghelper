@@ -7,3 +7,7 @@ table.data tr td {
 table.data tr td.curr {
     text-align: right;
 }
+
+table.data tr td.curr.empty {
+    color: lightgray;
+}

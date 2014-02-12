@@ -6,6 +6,7 @@
 		"mongojs": "*",
 		"request": "*",
 		"jade": "*",
-		"express": "*"
+		"express": "*",
+        "underscore": "*"
 	}
 }
