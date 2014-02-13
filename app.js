@@ -7,6 +7,7 @@ var bitminter = require(__dirname + '/bitminter.js');
 var mtgox = require(__dirname + '/mtgox.js');
 require(__dirname + '/catalogues.js');
 var pragDate = require(__dirname + '/src/util.js').pragDate;
+var _ = require('underscore');
 
 
 var crawlers = [multipool, bitminter, mtgox];
@@ -49,7 +50,7 @@ function getCoinValues(callback) {
                 }
                 res[doc.buy].push({
                     from: doc.from,
-                    rate: doc.best.rate,
+                    rate: Number(doc.best.rate).toFixed(8),
                     exchange: doc.best.exchange,
                     time: doc.best.time
                 });
@@ -57,10 +58,22 @@ function getCoinValues(callback) {
             }, {});
 
             _.each(docs, function (v, k) {
-                docs[k] =
+                docs[k] = _.indexBy(v, 'from');
+            });
+            _.each(docs, function (v, k) {
+                if (!v.EUR && v.BTC && docs.BTC.EUR) {
+                    v.EUR = {
+                        rate: (v.BTC.rate * docs.BTC.EUR.rate).toFixed(8),
+                        exchange: docs.BTC.EUR.exchange,
+                        time: Math.min(v.BTC.time, docs.BTC.EUR.time)
+                    }
+                }
             });
 
-            console.log(util.inspect(docs));
+
+
+//            console.log(util.inspect(docs));
+            callback(docs);
         }
     );
 }
@@ -135,8 +148,10 @@ app.get('/balance', function (req, res) {
         for (var i = 0; i < docs.length; i++) {
             docs[i].time = pragDate(docs[i].time);
         }
-        getCoinValues();
-        res.end(jades.balanceSimple({balances: docs}));
+        getCoinValues(function (values) {
+            res.end(jades.balanceSimple({balances: docs, values: values}));
+        });
+
     });
 
 });
