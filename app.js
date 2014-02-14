@@ -2,19 +2,24 @@
 var util = require('util');
 
 //var Crawler = require(__dirname + '/crawler.js');
-var multipool = require(__dirname + '/crawlers/multipool.js');
-var bitminter = require(__dirname + '/crawlers/bitminter.js');
-var mtgox = require(__dirname + '/crawlers/mtgox.js');
-var coinbase = require(__dirname + '/crawlers/coinbase.js');
+//var multipool = require(__dirname + '/crawlers/multipool.js');
+//var bitminter = require(__dirname + '/crawlers/bitminter.js');
+//var mtgox = require(__dirname + '/crawlers/mtgox.js');
+//var coinbase = require(__dirname + '/crawlers/coinbase.js');
 //require(__dirname + '/catalogues.js');
-var pragDate = require(__dirname + '/src/util.js').pragDate;
+var utils = require(__dirname + '/src/utils.js');
+var pragDate = utils.pragDate;
 var _ = require('underscore');
 
 
-var crawlers = [multipool, bitminter, mtgox, coinbase];
+var crawlers = utils.requireAll(__dirname + '/crawlers'); //[multipool, bitminter, mtgox, coinbase];
 
 for (var i = 0; i < crawlers.length; i++) {
-    crawlers[i].start();
+    if (!crawlers[i].start) {
+        console.warn('supposed crawler does not know Start: ' + util.inspect(crawlers[i]));
+    } else {
+        crawlers[i].start();
+    }
 }
 
 function getCoinValues(callback) {

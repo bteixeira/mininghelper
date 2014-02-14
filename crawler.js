@@ -71,7 +71,11 @@ var Crawler = function (url, handler, opts) {
 	me.logHashrate = function (data) {
 		// DO ME
 	};
-	
+
+	me.logDifficulty = function (data) {
+		// DO ME
+	};
+
 	me.logExchangeRate = function (data) {
 		data.time = data.time || new Date().getTime();
 		db.exchange_rates.save(data);

@@ -1,78 +1,65 @@
-var db = require('mongojs').connect('mininghelper', ['exchange_rates']);
-var request = require('request');
+var Crawler = require(__dirname + '/../crawler.js');
+var _ = require('underscore');
 
-var TIMEOUT = 1000;
+var bter = new Crawler('http://data.bter.com/api/1/tickers', function (body) {
 
-var exchanges = {
-	BTER: 'BTER'
-};
+    var me = this;
+    _.each(body, function (v, k) {
+        k = k.split('_');
+        me.logExchangeRate({
+            buy: k[0].toUpperCase(),
+            from: k[1].toUpperCase(),
+            rate: v.avg,
+            exchange: 'BTER'
+        });
+    });
 
-/* BTER COINS */
-var coins = ['BTC', 'PPC', 'ZET', 'FRC', 'NMC', 'DOGE', 'BTB'];
+});
+
+/*
+// THIS WILL BE USEFUL SOMEDAY
 
 function getBterUrl(buy, from) {
-	return 'http://data.bter.com/api/1/ticker/' + buy.toLowerCase() + '_' + from.toLowerCase();
+    return 'http://data.bter.com/api/1/ticker/' + buy.toLowerCase() + '_' + from.toLowerCase();
 }
-
-var num = 0;
-function setCrawler(buy, from) {
-	var n = num++;
-	var url = getBterUrl(pair.buy, pair.from);
-	console.log('setting BTER crawler ' + n + ' for ' + url);
-	function fetch () {
-		request({
-			url: url,
-			json: true
-		}, function (err, response, body) {
-			if (err) {
-				throw err;
-			}
-			if (response.statusCode !== 200) {
-				console.warn('warning, status code is ' + response.statusCode);
-			}
-			if (body) {
-				console.log(n, body.low);
-				db.exchange_rates.save({
-					buy: buy,
-					from: from,
-					rate: body.low,
-					time: new Date().getTime(),
-					exchange: exchanges.BTER
-				});
-			} else {
-				console.warn('no data received');
-			}
-			setTimeout(fetch, TIMEOUT);
-		});
-	}
-
-	fetch();
-}
-
 var pairs = [
-	{buy: 'PPC', from: 'BTC'},
-	{buy: 'ZET', from: 'BTC'},
-	{buy: 'FRC', from: 'BTC'},
-	//{buy: 'FRC', from: 'LTC'},
-	{buy: 'NMC', from: 'BTC'},
-	//{buy: 'NMC', from: 'LTC'}
-	{buy: 'DOGE', from: 'BTC'},
-	{buy: 'BTB', from: 'BTC'}
+    {buy: 'PPC', from: 'BTC'},
+    {buy: 'ZET', from: 'BTC'},
+    {buy: 'FRC', from: 'BTC'},
+    //{buy: 'FRC', from: 'LTC'},
+    {buy: 'NMC', from: 'BTC'},
+    //{buy: 'NMC', from: 'LTC'}
+    {buy: 'DOGE', from: 'BTC'},
+    {buy: 'BTB', from: 'BTC'}
 ];
 
-var pair;
-for (var i = 0 ; i < pairs.length ; i++) {
-	pair = pairs[i];
-	setCrawler(pair.buy, pair.from);
-}
-
-
-/******************************************************************************/
-/*
-addExchangeCrawler({
-	url: 'http://data.bter.com/api/1/ticker/doge_btc',
-	buy: coins.DOGE,
-	from: coins.BTC,
-	parser: parsers.BTER
+var crawlers = [];
+pairs.forEach(function (v) {
+    var buy = v.buy;
+    var from = v.from;
+    crawlers.push(new Crawler(getBterUrl(buy, from), function (body) {
+        this.logExchangeRate({
+            buy: buy,
+            from: from,
+            rate: body.avg,
+            exchange: 'BTER'
+        });
+    }));
 });
+
+var aggregate = new Crawler();
+_.each(aggregate, function (v, k) {
+    if (_.isFunction(v)) {
+        aggregate[k] = function () {
+            var args = arguments;
+            _.each(crawlers, function (crawler) {
+                crawler[k].apply(crawler, args);
+            });
+        };
+    }
+});
+
+module.exports = aggregate;
 */
+
+module.exports = bter;

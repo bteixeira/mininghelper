@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 exports.pragDate = function (timestamp) {
     var MONTHS = 'JA FE MR AP MA JN JL AG ST OT NV DE'.split(' ');
     var date = new Date(timestamp);
@@ -17,4 +19,12 @@ exports.pragDate = function (timestamp) {
         seconds = '0' + seconds;
     }
     return month + day + '@' + hours + ':' + minutes + ':' + seconds;
+};
+
+exports.requireAll = function (dir) {
+    var all = [];
+    fs.readdirSync(dir).forEach(function(file) {
+        all.push(require(dir + '/' + file));
+    });
+    return all;
 };
