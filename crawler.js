@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var request = require('request');
 var db = require('mongojs').connect('mininghelper', ['balances', 'exchange_rates']);
 
@@ -12,22 +13,20 @@ var Crawler = function (url, handler, opts) {
 	opts.interval = opts.interval || TIMEOUT;
 
 	function fetch () {
-        var headers = {};
-        if (opts.headers) {
-            headers = opts.headers();
-        }
-		request({
-				url: url,
-				json: true,
-                headers: headers
-			}, function (err, response, body) {
+        var headers = _.extend({}, opts.headers);
+        var params = _.extend({
+            url: url,
+            json: true,
+            headers: headers
+        }, opts.http);
+		request(params, function (err, response, body) {
 				if (!active) {
 					return;
 				}
 				if (err) {
-					throw err;
+					console.log('ERROR', url, err);
 				}
-				if (response.statusCode !== 200) {
+				else if (response.statusCode !== 200) {
 					console.warn('warning, status code is ' + response.statusCode + ', url=' + url);
 					console.warn(body);
 				} else {
