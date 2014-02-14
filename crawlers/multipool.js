@@ -1,5 +1,5 @@
-var Crawler = require(__dirname + '/crawler.js');
-var KEYS = require(__dirname + '/config.js').KEYS;
+var Crawler = require(__dirname + '/../crawler.js');
+var KEYS = require(__dirname + '/../config.js').KEYS;
 
 var multipool = new Crawler('http://api.multipool.us/api.php?api_key=' + KEYS.MULTIPOOL, function (body) {
 	var coins = body.currency;

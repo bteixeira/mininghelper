@@ -3,17 +3,23 @@ var db = require('mongojs').connect('mininghelper', ['balances', 'exchange_rates
 
 var TIMEOUT = 60 * 1000;
 
-var Crawler = function (url, handler, interval) {
+var Crawler = function (url, handler, opts) {
 
 	var me = this;
 	var id;
 	var active = false;
-	interval = interval || TIMEOUT;
+    opts = opts || {};
+	opts.interval = opts.interval || TIMEOUT;
 
 	function fetch () {
+        var headers = {};
+        if (opts.headers) {
+            headers = opts.headers();
+        }
 		request({
 				url: url,
-				json: true
+				json: true,
+                headers: headers
 			}, function (err, response, body) {
 				if (!active) {
 					return;
@@ -32,7 +38,7 @@ var Crawler = function (url, handler, interval) {
 				} else {
 					console.warn('no data received');
 				}
-				id = setTimeout(fetch, interval);
+				id = setTimeout(fetch, opts.interval);
 			}
 		);
 	}
@@ -53,8 +59,8 @@ var Crawler = function (url, handler, interval) {
 		}
 	};
 	
-	me.setInterval = function (_interval) {
-		interval = _interval;
+	me.setInterval = function (interval) {
+        opts.interval = interval;
 	};
 	
 	me.logBalance = function (data) {

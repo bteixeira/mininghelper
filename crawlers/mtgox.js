@@ -1,4 +1,4 @@
-var Crawler = require(__dirname + '/crawler.js');
+var Crawler = require(__dirname + '/../crawler.js');
 
 var bitminter = new Crawler('http://data.mtgox.com/api/2/BTCEUR/money/ticker', function (body) {
 	

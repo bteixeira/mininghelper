@@ -1,16 +1,17 @@
-var http = require('http');
+//var http = require('http');
 var util = require('util');
 
 //var Crawler = require(__dirname + '/crawler.js');
-var multipool = require(__dirname + '/multipool.js');
-var bitminter = require(__dirname + '/bitminter.js');
-var mtgox = require(__dirname + '/mtgox.js');
-require(__dirname + '/catalogues.js');
+var multipool = require(__dirname + '/crawlers/multipool.js');
+var bitminter = require(__dirname + '/crawlers/bitminter.js');
+var mtgox = require(__dirname + '/crawlers/mtgox.js');
+var coinbase = require(__dirname + '/crawlers/coinbase.js');
+//require(__dirname + '/catalogues.js');
 var pragDate = require(__dirname + '/src/util.js').pragDate;
 var _ = require('underscore');
 
 
-var crawlers = [multipool, bitminter, mtgox];
+var crawlers = [multipool, bitminter, mtgox, coinbase];
 
 for (var i = 0; i < crawlers.length; i++) {
     crawlers[i].start();
