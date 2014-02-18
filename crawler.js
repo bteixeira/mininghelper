@@ -11,9 +11,12 @@ var Crawler = function (url, handler, opts) {
 	var active = false;
     opts = opts || {};
 	opts.interval = opts.interval || TIMEOUT;
+    opts.headers = opts.headers || function () {
+        return {};
+    };
 
 	function fetch () {
-        var headers = _.extend({}, opts.headers);
+        var headers = _.extend({}, opts.headers());
         var params = _.extend({
             url: url,
             json: true,
@@ -77,6 +80,7 @@ var Crawler = function (url, handler, opts) {
 
 	me.logExchangeRate = function (data) {
 		data.time = data.time || new Date().getTime();
+//        console.log('logging x-rate', data.exchange, data.buy, data.from, data.rate);
 		db.exchange_rates.save(data);
 	};
 

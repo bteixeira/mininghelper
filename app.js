@@ -162,4 +162,33 @@ app.get('/balance', function (req, res) {
 
 });
 
+app.get(/\/exchange\/(\w+)/, function (req, res) {
+    console.log(util.inspect(req.params));
+    db.exchange_rates.group({
+        key: {
+            buy: 1,
+            exchange: 1
+        },
+        reduce: function (doc, res) {
+            if (!res.time || doc.time > res.time) {
+                res.time = doc.time;
+                res.rate = doc.rate;
+            }
+        },
+        initial: {},
+        cond: {
+            from: 'BTC'
+        }
+    }, function (err, docs) {
+        if (err) {
+            console.error(err);
+        }
+        for (var i = 0; i < docs.length; i++) {
+            docs[i].time = pragDate(docs[i].time);
+        }
+        console.log(util.inspect(docs));
+
+    });
+});
+
 app.listen(7410);
