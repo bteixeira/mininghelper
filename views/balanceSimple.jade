@@ -12,33 +12,34 @@ append content
             th total EUR
         - var BTC, EUR, totalBTC = totalEUR = 0
         for balance in balances
-            tr
-                td= balance.coin
-                if balance.balance
-                    td.curr= balance.balance.toFixed(8)
-                else
-                    td.curr.empty= balance.balance.toFixed(8)
-                if balance.unconfirmed
-                    td.curr= balance.unconfirmed.toFixed(8)
-                else
-                    td.curr.empty= balance.unconfirmed.toFixed(8)
-                td.time= balance.time
-                if values[balance.coin] && values[balance.coin].BTC
-                    - BTC = values[balance.coin].BTC.rate
-                    - totalBTC += BTC * balance.balance
-                    td.curr= Number(BTC).toFixed(8)
-                    td.curr= (BTC * balance.balance).toFixed(8)
-                else
-                    td
-                    td
-                if values[balance.coin] && values[balance.coin].EUR
-                    - EUR = values[balance.coin].EUR.rate
-                    - totalEUR += EUR * balance.balance
-                    td.curr= Number(EUR).toFixed(8)
-                    td.curr= (EUR * balance.balance).toFixed(8)
-                else
-                    td
-                    td
+            if balance.balance || balance.unconfirmed
+                tr
+                    td= balance.coin
+                    if balance.balance
+                        td.curr= balance.balance.toFixed(8)
+                    else
+                        td.curr.empty= balance.balance.toFixed(8)
+                    if balance.unconfirmed
+                        td.curr= balance.unconfirmed.toFixed(8)
+                    else
+                        td.curr.empty= balance.unconfirmed.toFixed(8)
+                    td.time= balance.time
+                    if values[balance.coin] && values[balance.coin].BTC
+                        - BTC = values[balance.coin].BTC.rate
+                        - totalBTC += BTC * balance.balance
+                        td.curr= Number(BTC).toFixed(8)
+                        td.curr= (BTC * balance.balance).toFixed(8)
+                    else
+                        td
+                        td
+                    if values[balance.coin] && values[balance.coin].EUR
+                        - EUR = values[balance.coin].EUR.rate
+                        - totalEUR += EUR * balance.balance
+                        td.curr= Number(EUR).toFixed(8)
+                        td.curr= (EUR * balance.balance).toFixed(8)
+                    else
+                        td
+                        td
         tr
             td(colspan="5") Sum:
             td.curr= totalBTC.toFixed(8)

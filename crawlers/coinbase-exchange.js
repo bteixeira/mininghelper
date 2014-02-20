@@ -14,7 +14,7 @@ var bitminter = new Crawler('https://coinbase.com/api/v1/currencies/exchange_rat
     _.each(body, function (v, k) {
         var coins = k.split('_to_');
         if (ALLOWED[coins[0]] && ALLOWED[coins[1]]) {
-            console.log('coinbase xchange', coins[0], coins[1], v);
+//            console.log('coinbase xchange', coins[0], coins[1], v);
             me.logExchangeRate({
                 buy: coins[0].toUpperCase(),
                 from: coins[1].toUpperCase(),
