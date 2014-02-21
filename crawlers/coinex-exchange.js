@@ -29,9 +29,10 @@ var coinex = new Crawler('https://coinex.pw/api/v2/trade_pairs', function (body)
         return {
             cookie: '__cfduid=dd461db7a2423f5fc8aec3a2b1e2303121392914592989; cf_clearance=86a7d8f4525bae30b6237352c2febef98305a2ac-1392914598-3600'
         };
-    }
+    },
+    interval: 10 * 60 * 1000
 });
 
 module.exports = coinex;
 
-coinex.start();
+//coinex.start();
