@@ -29,7 +29,7 @@ var kraken = new Crawler(URL, function (body) {
         coin: 'LTC',
         confirmed: body.result.XLTC,
         wallet: 'KRAKEN'
-    })
+    });
 }, {
     headers: function () {
         data.nonce = new Date() * 1000;

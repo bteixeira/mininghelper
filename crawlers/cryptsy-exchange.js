@@ -14,6 +14,10 @@ var cryptsy = new Crawler('http://pubapi.cryptsy.com/api.php?method=marketdatav2
 
     _.each(body.return.markets, function (v, k) {
         var coins = k.split('/');
+        if (!v.buyorders) {
+//            console.warn('!!!', v);
+            return;
+        }
         var order = v.buyorders[0];
         var rate = {
             buy: coins[0],

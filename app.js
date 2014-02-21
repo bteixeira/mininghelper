@@ -39,7 +39,7 @@ function getCoinValues(callback) {
             finalize: function (res) {
                 for (var p in res.exchanges) {
                     if (res.exchanges.hasOwnProperty(p)) {
-                        if (!res.best || res.exchanges[p].rate > res.best.rate) {
+                        if (!res.best || parseFloat(res.exchanges[p].rate) > parseFloat(res.best.rate)) {
                             res.best = res.exchanges[p];
                         }
                     }

@@ -23,23 +23,23 @@ var Crawler = function (url, handler, opts) {
             json: true,
             headers: headers
         }, opts.http);
+//        console.log(util.inspect(params));
         request(params, function (err, response, body) {
                 if (!active) {
                     return;
                 }
                 if (err) {
                     console.log('ERROR', url, err);
-                }
-                else if (response.statusCode !== 200) {
+                } else if (response.statusCode !== 200) {
                     console.warn('warning, status code is ' + response.statusCode + ', url=' + url);
                     console.warn(body);
                 } else {
-                    console.log('new data from ' + url);
-                }
-                if (body) {
-                    handler.call(me, body);
-                } else {
-                    console.warn('no data received');
+                    console.log('new response from ' + url);
+                    if (body) {
+                        handler.call(me, body);
+                    } else {
+                        console.warn('no data received');
+                    }
                 }
                 id = setTimeout(fetch, opts.interval);
             }
