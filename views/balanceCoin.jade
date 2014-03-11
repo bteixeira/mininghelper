@@ -1,0 +1,22 @@
+extends layout
+append content
+    h3= coin + ' Balance'
+    table.data
+        tr
+            th Wallet
+            th Balance
+            th (Unconfirmed)
+            th Timestamp
+        - var total = 0, totalUn = 0
+        for wallet in wallets
+            tr
+                td= wallet.wallet
+                td(class= wallet.balance ? 'curr' : 'curr empty')= wallet.balance.toFixed(8)
+                td(class= wallet.unconfirmed ? 'curr' : 'curr empty')= wallet.unconfirmed.toFixed(8)
+                td.time= wallet.time
+            - total += wallet.balance
+            - totalUn += wallet.unconfirmed
+        tr
+            td Sum:
+            td(class= total ? 'curr' : 'curr empty')= total.toFixed(8)
+            td(class= totalUn ? 'curr' : 'curr empty')= totalUn.toFixed(8)

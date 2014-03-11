@@ -76,9 +76,6 @@ function getCoinValues(callback) {
                 }
             });
 
-
-
-//            console.log(util.inspect(docs));
             callback(docs);
         }
     );
@@ -155,11 +152,43 @@ app.get('/balance', function (req, res) {
             docs[i].time = pragDate(docs[i].time);
         }
         getCoinValues(function (values) {
-            res.end(jades.balanceSimple({balances: docs, values: values}));
+            res.end(jades.balance({balances: docs, values: values}));
         });
 
     });
 
+});
+
+app.get(/\/balance\/(\w+)/, function (req, res) {
+    var coin = req.params[0];
+    db.balances.group({
+        key: {
+            wallet: 1
+        },
+        reduce: function (doc, res) {
+            if (doc.time > res.time) {
+                res.time = doc.time;
+                res.balance = (parseFloat(doc.confirmed) || 0) + (parseFloat(doc.unconfirmed) || 0);
+                res.unconfirmed = parseFloat(doc.unconfirmed) || 0;
+            }
+        },
+        initial: {
+            time: 0,
+            balance: 0,
+            unconfirmed: 0
+        },
+        cond: {
+            coin: coin
+        }
+    }, function (err, docs) {
+        if (err) {
+            console.error(err);
+        }
+        for (var i = 0; i < docs.length; i++) {
+            docs[i].time = pragDate(docs[i].time);
+        }
+        res.end(jades.balanceCoin({coin: coin, wallets: docs}));
+    });
 });
 
 app.get(/\/exchange\/(\w+)/, function (req, res) {
