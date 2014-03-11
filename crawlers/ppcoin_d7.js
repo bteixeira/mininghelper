@@ -3,6 +3,11 @@ var KEYS = require(__dirname + '/../config.js').KEYS;
 
 var ppcoin_d7 = new Crawler('https://ppcoin.d7.lt/api.php?api_key=' + KEYS.PPCOIN_D7, function (body) {
 
+    if (!body.user) {
+        console.warn('body in unknown format', body);
+        return;
+    }
+
     this.logBalance({
         coin: 'PPC',
         confirmed: body.user.balance,

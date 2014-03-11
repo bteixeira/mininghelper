@@ -1,7 +1,7 @@
 var fs = require('fs');
 
 exports.pragDate = function (timestamp) {
-    var MONTHS = 'JA FE MR AP MA JN JL AG ST OT NV DE'.split(' ');
+    var MONTHS = 'JA FE MR AP MI JN JL AG ST OT NV DE'.split(' ');
     var date = new Date(timestamp);
 
     var month = MONTHS[date.getMonth()];
