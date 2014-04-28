@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var request = require('request');
 var util = require('util');
-var db = require('mongojs').connect('mininghelper', ['balances', 'exchange_rates']);
+var db = require('mongojs').connect('mininghelper', ['balances', 'exchange_rates', 'difficulties']);
 
 var TIMEOUT = 60 * 1000;
 
@@ -75,14 +75,15 @@ var Crawler = function (url, handler, opts) {
         // DO ME
     };
 
-    me.logDifficulty = function (data) {
-        // DO ME
-    };
-
     me.logExchangeRate = function (data) {
         data.time = data.time || new Date().getTime();
 //        console.log('logging x-rate', data.exchange, data.buy, data.from, data.rate);
         db.exchange_rates.save(data);
+    };
+
+    me.logDifficulty = function (data) {
+        data.time = data.time || new Date().getTime();
+        db.difficulties.save(data);
     };
 
 };

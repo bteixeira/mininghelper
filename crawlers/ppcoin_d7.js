@@ -23,8 +23,8 @@ var ppcoin_d7 = new Crawler('https://ppcoin.d7.lt/api.php?api_key=' + KEYS.PPCOI
 
     this.logDifficulty({
         coin: 'PPC',
-        difficulty: body.pool.difficulty,
-        pool: 'PPCOIN_D7'
+        diff: body.pool.difficulty,
+        source: 'PPCOIN_D7'
     });
 });
 

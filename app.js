@@ -82,7 +82,7 @@ function getCoinValues(callback) {
 }
 
 
-var db = require('mongojs').connect('mininghelper', ['balances', 'exchange_rates']);
+var db = require('mongojs').connect('mininghelper', ['balances', 'exchange_rates', 'difficulties']);
 var express = require('express');
 var app = express();
 var jade = require('jade');
@@ -217,6 +217,23 @@ app.get(/\/exchange\/(\w+)/, function (req, res) {
         }
         console.log(util.inspect(docs));
 
+    });
+});
+
+app.get('/chart', function (req, res) {
+    var now = new Date();
+    var before = now - (10 * 60 * 60 * 1000);
+    db.difficulties.find({
+        coin: 'UNO',
+        time: {
+            $gt: before
+        }
+    }, function (err, docs) {
+        var points = [];
+        docs.forEach(function (doc) {
+            points.push({x: doc.time, y: doc.diff});
+        });
+        res.end(jades.chart({points: points}));
     });
 });
 
